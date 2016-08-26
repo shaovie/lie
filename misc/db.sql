@@ -15,8 +15,9 @@ create table d_domain_pool(
     id                  int unsigned not null auto_increment,
 
     domain              varchar(255) not null default '',
-    domain_type         tinyint not null default 1 comment '1: A级域名 2: B级域名 3：C级域名',
+    domain_type         varchar(4) not null default '' comment 'A: A级域名 B: B级域名 C：C级域名',
     state               varchar(255) not null default '' comment 'ok: 可用, killed:封杀, error:创建失败',
+    state_mtime         int not null default 0 comment '状态修改时间',
     remark              varchar(255) not null default '',
 
     ctime               int not null default 0,                     # 创建时间

@@ -77,6 +77,13 @@ class DnsModel
         return $ret === false ? 0 : $ret;
     }
 
+    public static function randomDomain()
+    {
+        $sql = 'select * from d_dns where rr like '
+            . "'*.%' order by rand() limit 1";
+        $ret = DB::getDB('r')->rawQuery($sql);
+        return $ret === false ? array() : $ret;
+    }
     public static function searchDomain($key, $page, $pageSize)
     {
         if (empty($key))

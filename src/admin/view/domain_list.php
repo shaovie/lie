@@ -21,8 +21,8 @@
     <![endif]-->
 </head>
 <body class="no-skin">
-	<h3 class="header smaller lighter blue"><span style="margin-right:20px">总数：<?php echo $totalNum;?></span><span class="refresh">刷新</span></h3>
-	<form action="/admin/Dns/search" class="form-horizontal" method="get">
+	<h3 class="header smaller lighter blue"><span style="margin-right:20px">总数：<?php echo $totalNum;?></span><a href="/admin/Domain/importDomainPage" class="btn btn-primary">倒入域名</a><span class="refresh">刷新</span></h3>
+	<form action="/admin/Domain/search" class="form-horizontal" method="get">
 	<table class="table table-striped table-bordered table-hover">
 	<tbody>
 		<tr>
@@ -44,8 +44,8 @@
 	<table class="table table-striped table-bordered table-hover">
 		<tbody>
 		<tr>
-			<th class="text-center" style="width:180px;">域名</th>
-			<th class="text-center" style="width:120px;">类型</th>
+			<th class="text-center" style="width:280px;">域名</th>
+			<th class="text-center" style="width:50px;">类型</th>
 			<th class="text-center" style="width:100px;">状态</th>
 			<th class="text-center" style="width:250px;">描述</th>
 			<th class="text-center" style="width:180px;">时间</th>
@@ -57,7 +57,7 @@
                 <?php echo $one['domain']?>
             </td>
 			<td style="text-align:center;vertical-align:middle;">
-                <?php echo $one['type']?>
+                <?php echo $one['domain_type']?>
             </td>
 			<td style="text-align:center;vertical-align:middle;">
                 <?php echo $one['state']?>

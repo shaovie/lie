@@ -171,6 +171,45 @@ class DomainController extends AdminController
         );
         $this->display('dns_add', $data);
     }
+    public function importDomainPage()
+    {
+        $data = array(
+            'title' => '域名倒入',
+            'coupon' => array(),
+            'action' => '/admin/Domain/importDomain',
+        );
+        $this->display('domain_import', $data);
+    }
+    public function importDomain()
+    {
+        $domainListP = trim($this->postParam('domainList', ''));
+        if (strpos(',', $domainListP) !== false) {
+            $domainList = explode(',', $domainListP);
+        } else {
+            $domainList = explode("\n", $domainListP);
+        }
+        if (count($domainList) > 1000) {
+            $this->ajaxReturn(ERR_PARAMS_ERROR, '域名不能超过1000个');
+            return ;
+        }
+        if (empty($domainList)) {
+            $this->ajaxReturn(ERR_PARAMS_ERROR, '域名不能为空');
+            return ;
+        }
+        $domainType = trim($this->postParam('domainType', ''));
+        if ($domainType != 'A' && $domainType != 'B') {
+            $this->ajaxReturn(ERR_PARAMS_ERROR, '域名类型不对');
+            return ;
+        }
+        foreach ($domainList as $domain) {
+            DomainPoolModel::newOne(
+                $domain,
+                $domainType,
+                'ok'
+            );
+        }
+        $this->ajaxReturn(0, '域名导入成功');
+    }
     public function add()
     {
         $error = '';

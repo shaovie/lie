@@ -7,11 +7,13 @@
 namespace src\job\controller;
 
 use \src\common\Nosql;
+use \src\common\Util;
 use \src\common\WxSDK;
 use \src\common\Log;
 use \src\job\model\AsyncModel;
 
 use \src\admin\model\DnsModel;
+use \src\admin\model\DomainPoolModel;
 
 require_once ROOT_PATH . '/aliyun-openapi-php-sdk/aliyun-php-sdk-core/Config.php';
 use Alidns\Request\V20150109 as Alidns;
@@ -23,6 +25,29 @@ class AliDnsController extends JobController
     public function doit()
     {
         $this->spawnTask(self::ASYNC_ALI_DNS_QUEUE_SIZE);
+    }
+
+    public function genDomain()
+    {
+        $count = DomainPoolModel::fetchCount(
+            array('domain_type', 'state'),
+            array('B', 'ok'),
+            array('and')
+        );
+        if ($count < 100) {
+            $ret = DnsModel::randomDomain();
+            if (empty($ret))
+                return ;
+            for ($i = 0; $i < 100; $i++) {
+                $str = Util::getRandomStr(8);
+                $domain = $str . substr($ret[0]['rr'], 1) . '.' . $ret[0]['domain'];
+                DomainPoolModel::newOne(
+                    $domain,
+                    'B',
+                    'ok'
+                );
+            }
+        }
     }
 
     protected function run($idx)

@@ -64,13 +64,19 @@ class DomainPoolModel
         if (empty($key))
             return array();
         $page = $page > 0 ? $page - 1 : $page;
-        $key = str_replace('_', '\_', $key);
-        $key = str_replace('%', '\%', $key);
+        if ($key == 'A' || $key == 'B') {
+            $sql = "select * from d_domain_pool where domain_type='" . $key
+                . "' order by id desc limit "
+                . $pageSize * $page . ', ' . $pageSize;
+        } else {
+            $key = str_replace('_', '\_', $key);
+            $key = str_replace('%', '\%', $key);
 
-        $sql = 'select * from d_domain_pool where domain like '
-            . "'%" . trim($key) . "%'"
-            . ' order by id desc limit '
-            . $pageSize * $page . ', ' . $pageSize;
+            $sql = 'select * from d_domain_pool where domain like '
+                . "'%" . trim($key) . "%'"
+                . ' order by id desc limit '
+                . $pageSize * $page . ', ' . $pageSize;
+        }
         $ret = DB::getDB('r')->rawQuery($sql);
         return $ret === false ? array() : $ret;
     }
@@ -78,11 +84,17 @@ class DomainPoolModel
     {
         if (empty($key))
             return 0;
-        $key = str_replace('_', '\_', $key);
-        $key = str_replace('%', '\%', $key);
 
-        $sql = 'select count(*) as c from d_domain_pool where domain like '
-            . "'%" . trim($key) . "%'";
+        $page = $page > 0 ? $page - 1 : $page;
+        if ($key == 'A' || $key == 'B') {
+            $sql = "select count(*) as c from d_domain_pool where domain_type='" . $key . "'";
+        } else {
+            $key = str_replace('_', '\_', $key);
+            $key = str_replace('%', '\%', $key);
+
+            $sql = 'select count(*) as c from d_domain_pool where domain like '
+                . "'%" . trim($key) . "%'";
+        }
         $ret = DB::getDB('r')->rawQuery($sql);
         return $ret === false ? 0 : (int)$ret[0]['c'];
     }
