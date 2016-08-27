@@ -9,6 +9,7 @@ namespace src\job\controller;
 use \src\common\Nosql;
 use \src\common\Util;
 use \src\common\WxSDK;
+use \src\common\HttpUtil;
 use \src\common\Log;
 use \src\job\model\AsyncModel;
 
@@ -25,6 +26,29 @@ class AliDnsController extends JobController
     public function doit()
     {
         $this->spawnTask(self::ASYNC_ALI_DNS_QUEUE_SIZE);
+    }
+
+    public function monitorDomain()
+    {
+        $ret = DomainPoolModel::fetchSome(
+            array('state'), array('ok'),
+            false,
+            1, 100
+        );
+        if (empty($ret))
+            return ;
+        foreach ($ret as $item) {
+            $url = $item['domain'];
+            //$url = 'u9xLYEVx.43458943.91279999.com';
+            $uid = '1932338682'; // 梓墨
+            $uid = '35981520'; // 在路上
+            $req ='http://weixin.artxun.cn/wx_api.php?api=checkurl&url='
+                . urlencode('http://' . $url)
+                . '&cb=' . urlencode('http://domainht.wanziqiao.com/admin/DomainCheck/callbackapi?domain=' . $url)
+                . '&uid=' . $uid;
+            $ret = HttpUtil::request($req, false, false, 5);
+        }
+        return true;
     }
 
     public function genDomain()

@@ -187,8 +187,12 @@ class DnsController extends AdminController
     }
     private function fetchFormParams(&$params, &$error)
     {
-        $params['domainList'] = trim($this->postParam('domainList', ''));
-        $params['domainList'] = explode(',', $params['domainList']);
+        $domainListP = trim($this->postParam('domainList', ''));
+        if (strpos(',', $domainListP) !== false) {
+            $params['domainList'] = explode(',', $domainListP);
+        } else {
+            $params['domainList'] = explode("\n", $domainListP);
+        }
         if (count($params['domainList']) > 500) {
             $error = '解析记录不能超过500个';
             return false;
