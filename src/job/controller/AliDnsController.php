@@ -39,8 +39,8 @@ class AliDnsController extends JobController
             return ;
         foreach ($ret as $item) {
             $url = $item['domain'];
-            //$url = 'u9xLYEVx.43458943.91279999.com';
-            $uid = '1932338682'; // 梓墨
+            $url = 'u9xLYEVx.43458943.91279999.com';
+            //$uid = '1932338682'; // 梓墨
             $uid = '35981520'; // 在路上
             $req ='http://weixin.artxun.cn/wx_api.php?api=checkurl&url='
                 . urlencode('http://' . $url)

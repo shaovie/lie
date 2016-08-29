@@ -25,6 +25,8 @@ class DomainCheckController extends BaseController
         if ($ret == 2) {
             DomainPoolModel::update($domain, array('state' => 'killed', 'mtime' => CURRENT_TIME));
             Log::rinfo('domain ' . $domain . ' killed');
+        } else {
+            Log::rinfo('domain ' . $domain . ' not killed');
         }
         return ;
     }
